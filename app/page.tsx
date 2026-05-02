@@ -143,11 +143,7 @@ export default function Page() {
               <h3 className="text-2xl font-semibold mb-8 text-teal-400">AI / Machine Learning</h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
                 <div className="flex flex-col items-center">
-                  <img
-                    src="https://cdn.iconscout.com/icon/free/png-256/free-python-logo-icon-download-in-svg-png-gif-file-formats--technology-social-media-vol-5-pack-logos-icons-3030224.png?f=webp"
-                    alt="Python"
-                    className="w-16 h-16 mb-2"
-                  />
+                  <img src="/Python_icon.png" alt="Python" className="w-16 h-16 mb-2" />
                   <span className="text-gray-300">Python</span>
                 </div>
                 <div className="flex flex-col items-center">
@@ -168,26 +164,26 @@ export default function Page() {
                 </div>
                 <div className="flex flex-col items-center">
                   <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/3/31/NumPy_logo_2020.svg"
+                    alt="NumPy"
+                    className="w-16 h-16 mb-2"
+                  />
+                  <span className="text-gray-300">NumPy</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <img
                     src="https://www.svgrepo.com/show/353949/jupyter.svg"
                     alt="Jupyter"
                     className="w-16 h-16 mb-2"
                   />
                   <span className="text-gray-300">Jupyter</span>
                 </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/9/96/Pytorch_logo.png"
-                    alt="PyTorch"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">PyTorch</span>
-                </div>
               </div>
             </div>
 
             <div className="mb-12">
               <h3 className="text-2xl font-semibold mb-8 text-teal-400">Microsoft Power Platform</h3>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+              <div className="flex justify-center gap-16">
                 <div className="flex flex-col items-center">
                   <img
                     src="https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg"
@@ -203,26 +199,6 @@ export default function Page() {
                     className="w-16 h-16 mb-2"
                   />
                   <span className="text-gray-300">Power Automate</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/0/01/Microsoft_Power_Apps.svg"
-                    alt="Power Apps"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">Power Apps</span>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                  <div className="w-16 h-16 mb-2 flex items-center justify-center bg-gray-700 rounded text-teal-400 font-bold text-xl">
-                    DAX
-                  </div>
-                  <span className="text-gray-300">DAX</span>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                  <div className="w-16 h-16 mb-2 flex items-center justify-center bg-gray-700 rounded text-teal-400 font-bold text-base">
-                    SAP&nbsp;PM
-                  </div>
-                  <span className="text-gray-300">SAP PM</span>
                 </div>
               </div>
             </div>
@@ -247,19 +223,11 @@ export default function Page() {
                   <span className="text-gray-300">TypeScript</span>
                 </div>
                 <div className="flex flex-col items-center">
-                  <img
-                    src="https://static-00.iconduck.com/assets.00/java-icon-1511x2048-6ikx8301.png"
-                    alt="Java"
-                    className="w-16 h-16 mb-2"
-                  />
+                  <img src="/javaicon.png" alt="Java" className="w-16 h-16 mb-2" />
                   <span className="text-gray-300">Java</span>
                 </div>
                 <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/C_Programming_Language.svg/1200px-C_Programming_Language.svg.png"
-                    alt="C"
-                    className="w-16 h-16 mb-2"
-                  />
+                  <img src="/C_icon.png" alt="C" className="w-16 h-16 mb-2" />
                   <span className="text-gray-300">C</span>
                 </div>
                 <div className="flex flex-col items-center">
@@ -293,19 +261,11 @@ export default function Page() {
                   <span className="text-gray-300">Next.js</span>
                 </div>
                 <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Git_icon.svg/2048px-Git_icon.svg.png"
-                    alt="Git"
-                    className="w-16 h-16 mb-2"
-                  />
+                  <img src="/Git_icon.svg.png" alt="Git" className="w-16 h-16 mb-2" />
                   <span className="text-gray-300">Git</span>
                 </div>
                 <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg"
-                    alt="PostgreSQL"
-                    className="w-16 h-16 mb-2"
-                  />
+                  <img src="/Postgresql_elephant.svg.png" alt="PostgreSQL" className="w-16 h-16 mb-2" />
                   <span className="text-gray-300">PostgreSQL</span>
                 </div>
                 <div className="flex flex-col items-center">
