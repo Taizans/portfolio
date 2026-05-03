@@ -1,439 +1,578 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { Github, Linkedin, Mail } from "lucide-react"
+import { motion, useInView, animate } from "framer-motion"
+import { useEffect, useRef, useState } from "react"
+import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
+import ParticleBackground from "./components/ParticleBackground"
 
+/* ----------------------------------------------------------------- *
+ *  Animated count-up — used in the Hero stats row                    *
+ * ----------------------------------------------------------------- */
+function CountUp({
+  to,
+  decimals = 0,
+  suffix = "",
+  prefix = "",
+  duration = 2.2,
+}: {
+  to: number
+  decimals?: number
+  suffix?: string
+  prefix?: string
+  duration?: number
+}) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, margin: "0px 0px -60px 0px" })
+  const [val, setVal] = useState(0)
+
+  useEffect(() => {
+    if (!inView) return
+    const controls = animate(0, to, {
+      duration,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => setVal(v),
+    })
+    return () => controls.stop()
+  }, [inView, to, duration])
+
+  const formatted = val.toLocaleString("en-US", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })
+
+  return (
+    <span ref={ref} className="font-mono tabular-nums">
+      {prefix}
+      {formatted}
+      {suffix}
+    </span>
+  )
+}
+
+/* ----------------------------------------------------------------- *
+ *  Real ETR675 pipeline snippet — anonymized, illustrative only      *
+ * ----------------------------------------------------------------- */
+const ETR675_SNIPPET = `from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.calibration import CalibratedClassifierCV
+
+vec = TfidfVectorizer(
+    ngram_range=(1, 2),
+    max_features=30_000,
+    sublinear_tf=True,
+    stop_words=stopwords_it,
+)
+clf = OneVsRestClassifier(
+    LogisticRegression(class_weight="balanced", solver="liblinear")
+)
+model = CalibratedClassifierCV(clf, cv=5, method="sigmoid")
+model.fit(vec.fit_transform(X_train), y_train)`
+
+/* ----------------------------------------------------------------- *
+ *  Skills, grouped — rendered as monospace pill tags                  *
+ * ----------------------------------------------------------------- */
+const SKILL_GROUPS: { title: string; items: string[] }[] = [
+  {
+    title: "AI / Machine Learning",
+    items: [
+      "Python",
+      "scikit-learn",
+      "pandas",
+      "NumPy",
+      "Jupyter",
+      "TF-IDF",
+      "Logistic Regression",
+      "OneVsRest",
+      "Calibrated CV",
+      "Multi-task Classification",
+      "NLP",
+    ],
+  },
+  {
+    title: "Microsoft Power Platform",
+    items: ["Power BI", "Power Automate", "DAX", "Star Schema"],
+  },
+  {
+    title: "Languages",
+    items: ["JavaScript", "TypeScript", "Java", "C", "SQL"],
+  },
+  {
+    title: "Web & Tools",
+    items: ["React", "Next.js", "Node.js", "Tailwind CSS", "Git", "PostgreSQL", "MongoDB"],
+  },
+]
+
+/* ----------------------------------------------------------------- *
+ *  Engineering log entries — "currently building"                    *
+ * ----------------------------------------------------------------- */
+const LOG_ENTRIES: { date: string; title: string; body: string; tags: string[] }[] = [
+  {
+    date: "2026 · in progress",
+    title: "Root Cause Analysis with 5-Why chains",
+    body: "Walking a chain of causal questions on top of the ETR675 classifier output. Exploring small transformer encoders fine-tuned on the maintenance corpus.",
+    tags: ["transformers", "fine-tuning", "Python"],
+  },
+  {
+    date: "2026 · ongoing",
+    title: "Sharper English & ML reading list",
+    body: "Pushing English from B2 toward C1 (technical interviews and EU job market run in English). Reading foundational ML papers and the scikit-learn / PyTorch source for the algorithms I actually ship.",
+    tags: ["interviewing", "papers"],
+  },
+]
+
+/* ================================================================= */
 export default function Page() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
-      <header className="fixed w-full top-0 z-50 bg-gray-900/80 backdrop-blur-sm">
-        <nav className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-          <Link href="/" className="text-2xl font-bold text-teal-400">
-            TJF
+    <div className="min-h-screen bg-[#050505] text-zinc-100">
+      <ParticleBackground />
+
+      {/* ---------- Nav ---------- */}
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-[#050505]/70 backdrop-blur-md">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <Link href="#home" className="font-mono text-sm tracking-tight text-teal-400">
+            tjf<span className="text-zinc-500">.</span>dev
           </Link>
-          <div className="space-x-8">
-            <Link href="#home" className="hover:text-teal-400 transition-colors">
-              Home
-            </Link>
-            <Link href="#about" className="hover:text-teal-400 transition-colors">
+          <div className="hidden gap-7 text-sm text-zinc-400 md:flex">
+            <Link href="#about" className="transition-colors hover:text-zinc-100">
               About
             </Link>
-            <Link href="#skills" className="hover:text-teal-400 transition-colors">
-              Skills
-            </Link>
-            <Link href="#projects" className="hover:text-teal-400 transition-colors">
+            <Link href="#projects" className="transition-colors hover:text-zinc-100">
               Projects
             </Link>
-            <Link href="#contact" className="hover:text-teal-400 transition-colors">
+            <Link href="#skills" className="transition-colors hover:text-zinc-100">
+              Skills
+            </Link>
+            <Link href="#log" className="transition-colors hover:text-zinc-100">
+              Log
+            </Link>
+            <Link href="#contact" className="transition-colors hover:text-zinc-100">
               Contact
             </Link>
           </div>
+          <Link
+            href="mailto:tizianofloriddia16@gmail.com"
+            className="group inline-flex items-center gap-1.5 rounded-md border border-white/10 px-3 py-1.5 font-mono text-xs text-zinc-300 transition-colors hover:border-teal-400/60 hover:text-teal-400"
+          >
+            get in touch
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </Link>
         </nav>
       </header>
 
-      <main className="pt-24 px-6">
-        <section id="home" className="min-h-[calc(100vh-6rem)] flex items-center">
-          <div className="max-w-7xl mx-auto">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <p className="text-teal-400 font-mono mb-4">Hi, my name is</p>
-              <h1 className="text-6xl font-bold text-white mb-3">Tiziano Jhonny Floriddia</h1>
-              <h2 className="text-5xl font-bold text-gray-300 mb-6">
-                Machine Learning for real industrial problems.
-              </h2>
-              <p className="text-gray-400 max-w-2xl mb-8">
-                I&apos;m an AI Engineer at Alstom Ferroviaria. I build end-to-end ML systems on operational data and
-                automate enterprise processes — from research notebook to desktop app shipped to the team. Currently
-                exploring more verticality on AI/ML in tech-first contexts.
+      <main>
+        {/* ---------- Hero ---------- */}
+        <section
+          id="home"
+          className="relative flex min-h-screen items-center overflow-hidden bg-dot-grid px-6 pt-24"
+        >
+          <div className="mx-auto w-full max-w-6xl">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <p className="mb-5 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-teal-400">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal-400" />
+                AI Engineer · Alstom Ferroviaria
               </p>
-              <div className="flex space-x-4">
+              <h1 className="text-5xl font-semibold tracking-tight text-zinc-100 md:text-7xl">
+                Tiziano Jhonny <span className="text-zinc-500">Floriddia</span>
+              </h1>
+              <p className="mt-6 max-w-2xl text-lg text-zinc-400 md:text-xl">
+                I build production ML systems on operational industrial data. From the research notebook to the
+                desktop app shipped to the maintenance team.
+              </p>
+
+              {/* Stats row — animated count-up */}
+              <div className="mt-14 grid gap-8 border-t border-white/5 pt-10 sm:grid-cols-3">
+                <Stat
+                  number={<CountUp to={58223} />}
+                  label="labeled notifications in training set"
+                />
+                <Stat
+                  number={<CountUp to={74.5} decimals={1} suffix="%" />}
+                  label="auto-classified above confidence in production"
+                />
+                <Stat
+                  number={<CountUp to={0.95} decimals={2} />}
+                  label="F1 weighted on Root Cause subsystem (23 classes)"
+                />
+              </div>
+
+              <div className="mt-12 flex items-center gap-3">
                 <Link
                   href="https://github.com/Taizans"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-teal-400 hover:text-teal-300 transition-colors p-2 rounded-full hover:bg-gray-800"
+                  aria-label="GitHub"
+                  className="rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
                 >
-                  <Github className="w-8 h-8" />
-                  <span className="sr-only">GitHub</span>
+                  <Github className="h-5 w-5" />
                 </Link>
                 <Link
                   href="https://www.linkedin.com/in/tiziano-jhonny-floriddia-8478332b6/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-teal-400 hover:text-teal-300 transition-colors p-2 rounded-full hover:bg-gray-800"
+                  aria-label="LinkedIn"
+                  className="rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
                 >
-                  <Linkedin className="w-8 h-8" />
-                  <span className="sr-only">LinkedIn</span>
+                  <Linkedin className="h-5 w-5" />
                 </Link>
                 <Link
                   href="mailto:tizianofloriddia16@gmail.com"
-                  className="text-teal-400 hover:text-teal-300 transition-colors p-2 rounded-full hover:bg-gray-800"
+                  aria-label="Email"
+                  className="rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
                 >
-                  <Mail className="w-8 h-8" />
-                  <span className="sr-only">Email</span>
+                  <Mail className="h-5 w-5" />
                 </Link>
               </div>
             </motion.div>
           </div>
         </section>
 
-        <section id="about" className="py-20 bg-gray-900">
-          <div className="max-w-4xl mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center text-white">About Me</h2>
-            <div className="space-y-6 text-gray-300">
+        {/* ---------- About ---------- */}
+        <Section id="about" eyebrow="01 / about" title="A short walk through.">
+          <div className="grid gap-12 md:grid-cols-5">
+            <div className="space-y-5 text-zinc-300 md:col-span-3">
               <p>
-                I&apos;m an AI Engineer at Alstom Ferroviaria in Savigliano (Italy), where I build production ML
-                systems on operational railway data and automate enterprise processes. My current focus is a
-                multi-task text classification system on SAP PM maintenance notifications for the ETR675 high-speed
-                fleet — trained on ~58k labeled records, deployed as a desktop app that auto-classifies 74,5% of new
-                notifications above confidence threshold.
+                I&apos;m an AI Engineer at <span className="text-zinc-100">Alstom Ferroviaria</span> in
+                Savigliano, Italy. My day-to-day is a multi-task text classification system on{" "}
+                <span className="font-mono text-teal-400">SAP PM</span> maintenance notifications for the ETR675
+                high-speed fleet — trained on ~58k labeled records, deployed as a desktop app the team actually
+                uses.
               </p>
               <p>
-                I graduated in Computer Science at the University of Turin in November 2025 with a thesis on a
-                blockchain-based system for the validation and tokenization of agricultural environmental data
-                (advisor: Prof. Andrea Bracciali).
+                I graduated in <span className="text-zinc-100">Computer Science at the University of Turin</span>{" "}
+                in November 2025. My BSc thesis was a blockchain-based system for the validation and tokenization
+                of agricultural environmental data — advised by Prof. Andrea Bracciali.
               </p>
               <p>
-                Before going AI/ML, I worked across the stack — low-level systems (C), web (React/Next.js), databases
-                (PostgreSQL/MongoDB), Microsoft Power Platform — which now pays off whenever I need to ship a model
-                into a Tkinter desktop app, generate colored Excel / interactive HTML / PowerPoint reports, or wire
+                Before going AI/ML, I worked across the stack — low-level systems in C, web in React/Next.js,
+                relational and NoSQL databases, Microsoft Power Platform. That foundation now pays off whenever I
+                need to ship a model into a Tkinter desktop app, generate Excel/HTML/PowerPoint reports, or wire
                 production data into Power BI dashboards used daily by Engineering and management.
               </p>
             </div>
-            <div className="bg-gray-800 p-6 rounded-lg flex flex-col md:flex-row justify-between mt-10">
-              <div className="md:w-1/2 mb-6 md:mb-0 md:pr-4">
-                <h4 className="text-lg font-semibold text-teal-400 mb-4">Education</h4>
-                <div className="space-y-4">
+
+            <aside className="md:col-span-2">
+              <div className="rounded-lg border border-white/10 bg-white/[0.02] p-6">
+                <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">Education</p>
+                <div className="space-y-5 text-sm">
                   <div>
-                    <p className="text-white font-medium">BSc in Computer Science</p>
-                    <p className="text-gray-400">University of Turin · 2022 — 2025</p>
-                    <p className="text-gray-500 text-sm mt-1">
-                      Thesis: blockchain for environmental data validation & tokenization in agriculture
+                    <p className="text-zinc-100">BSc Computer Science</p>
+                    <p className="text-zinc-500">University of Turin · 2022 — 2025</p>
+                    <p className="mt-1 text-zinc-400">
+                      Thesis: blockchain for environmental data validation &amp; tokenization in agriculture
                     </p>
                   </div>
                   <div>
-                    <p className="text-white font-medium">Scientific High School Diploma</p>
-                    <p className="text-gray-400">
-                      Liceo Scientifico Gaetano Curcio
-                      <br />
-                      Ispica (RG)
-                    </p>
+                    <p className="text-zinc-100">Scientific High School Diploma</p>
+                    <p className="text-zinc-500">Liceo Scientifico Gaetano Curcio · Ispica (RG)</p>
                   </div>
                 </div>
               </div>
-              <div className="md:w-1/2 md:pl-4 md:border-l border-gray-700">
-                <h4 className="text-lg font-semibold text-teal-400 mb-4">Focus Areas</h4>
-                <ul className="list-disc list-inside text-gray-300 space-y-2">
-                  <li>Machine Learning on industrial data</li>
-                  <li>Process automation</li>
-                  <li>Microsoft Power Platform</li>
-                  <li>Distributed systems & blockchain</li>
-                </ul>
-              </div>
-            </div>
+            </aside>
           </div>
-        </section>
+        </Section>
 
-        <section id="skills" className="py-20 bg-gray-800/50">
-          <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center">Skills</h2>
-
-            <div className="mb-12">
-              <h3 className="text-2xl font-semibold mb-8 text-teal-400">AI / Machine Learning</h3>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-                <div className="flex flex-col items-center">
-                  <img src="/Python_icon.png" alt="Python" className="w-16 h-16 mb-2" />
-                  <span className="text-gray-300">Python</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg"
-                    alt="scikit-learn"
-                    className="w-16 h-16 mb-2 bg-white rounded p-1"
-                  />
-                  <span className="text-gray-300">scikit-learn</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/2/22/Pandas_mark.svg"
-                    alt="pandas"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">pandas</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/3/31/NumPy_logo_2020.svg"
-                    alt="NumPy"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">NumPy</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://www.svgrepo.com/show/353949/jupyter.svg"
-                    alt="Jupyter"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">Jupyter</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-12">
-              <h3 className="text-2xl font-semibold mb-8 text-teal-400">Microsoft Power Platform</h3>
-              <div className="flex justify-center gap-16">
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg"
-                    alt="Power BI"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">Power BI</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Microsoft_Power_Automate.svg"
-                    alt="Power Automate"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">Power Automate</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-12">
-              <h3 className="text-2xl font-semibold mb-8 text-teal-400">Languages</h3>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://www.svgrepo.com/show/303206/javascript-logo.svg"
-                    alt="JavaScript"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">JavaScript</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg"
-                    alt="TypeScript"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">TypeScript</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img src="/javaicon.png" alt="Java" className="w-16 h-16 mb-2" />
-                  <span className="text-gray-300">Java</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img src="/C_icon.png" alt="C" className="w-16 h-16 mb-2" />
-                  <span className="text-gray-300">C</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://www.svgrepo.com/show/331760/sql-database-generic.svg"
-                    alt="SQL"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">SQL</span>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-2xl font-semibold mb-8 text-teal-400">Web & Tools</h3>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
-                    alt="React"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">React</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Nextjs-logo.svg"
-                    alt="Next.js"
-                    className="w-16 h-16 mb-2 bg-white rounded p-1"
-                  />
-                  <span className="text-gray-300">Next.js</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img src="/Git_icon.svg.png" alt="Git" className="w-16 h-16 mb-2" />
-                  <span className="text-gray-300">Git</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img src="/Postgresql_elephant.svg.png" alt="PostgreSQL" className="w-16 h-16 mb-2" />
-                  <span className="text-gray-300">PostgreSQL</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <img
-                    src="https://www.svgrepo.com/show/331488/mongodb.svg"
-                    alt="MongoDB"
-                    className="w-16 h-16 mb-2"
-                  />
-                  <span className="text-gray-300">MongoDB</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="projects" className="py-20 bg-gray-900">
-          <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-12 text-center">Selected Projects</h2>
-
-            <h3 className="text-2xl font-semibold mb-6 text-teal-400">Featured</h3>
-            <div className="grid gap-8 md:grid-cols-2 mb-16">
-              <div className="bg-gray-800 rounded-lg p-6 shadow-lg border border-teal-400/20">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-xl font-semibold text-teal-400">AI Solution — ETR675 Maintenance</h3>
-                  <span className="text-xs px-2 py-1 rounded bg-teal-400/10 text-teal-300 border border-teal-400/30">
+        {/* ---------- Featured projects ---------- */}
+        <Section id="projects" eyebrow="02 / featured work" title="Things I&rsquo;ve shipped.">
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* ETR675 — with code snippet */}
+            <article className="glow-card flex flex-col rounded-xl border border-white/10 bg-white/[0.02] p-7 transition-colors hover:border-white/20">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-teal-400">
                     Production · Alstom
-                  </span>
+                  </p>
+                  <h3 className="mt-2 text-xl font-semibold text-zinc-100">
+                    AI Solution — ETR675 Maintenance
+                  </h3>
                 </div>
-                <p className="text-gray-300 mb-4">
-                  End-to-end multi-task text classification system on SAP PM maintenance notifications for the ETR675
-                  high-speed fleet. Trained on 58.223 labeled notifications. In production: auto-classifies 74,5% of
-                  new notifications above confidence threshold, cutting triage time by ~85-95%.
-                </p>
-                <p className="text-sm text-gray-400">
-                  Stack: Python · scikit-learn · TF-IDF · Logistic Regression + OneVsRest · CalibratedClassifierCV ·
-                  StratifiedKFold · Tkinter · PyInstaller
-                </p>
-                <p className="text-xs text-gray-500 mt-3 italic">Codebase confidential (proprietary).</p>
               </div>
+              <p className="mt-4 text-zinc-400">
+                End-to-end multi-task text classification on SAP PM maintenance notifications for the ETR675
+                high-speed fleet. Trained on{" "}
+                <span className="font-mono text-zinc-200">58,223</span> labeled notifications. In production:{" "}
+                auto-classifies <span className="font-mono text-zinc-200">74.5%</span> of new notifications above
+                confidence threshold, cutting triage time by{" "}
+                <span className="font-mono text-zinc-200">~85-95%</span>.
+              </p>
 
-              <div className="bg-gray-800 rounded-lg p-6 shadow-lg border border-teal-400/20">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-xl font-semibold text-teal-400">Blockchain for Environmental Data</h3>
-                  <span className="text-xs px-2 py-1 rounded bg-teal-400/10 text-teal-300 border border-teal-400/30">
-                    BSc Thesis · UniTo
+              <pre className="mt-6 overflow-x-auto rounded-md border border-white/10 bg-black/40 p-4 font-mono text-[11.5px] leading-relaxed text-zinc-300">
+                <code>{ETR675_SNIPPET}</code>
+              </pre>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {[
+                  "Python",
+                  "scikit-learn",
+                  "TF-IDF",
+                  "OneVsRest",
+                  "5-fold StratifiedKFold",
+                  "Tkinter",
+                  "PyInstaller",
+                ].map((t) => (
+                  <span key={t} className="pill">
+                    {t}
                   </span>
-                </div>
-                <p className="text-gray-300 mb-4">
-                  System for the validation and tokenization of agricultural environmental data on a blockchain.
-                  Designed to bring trust and traceability to IoT sensor measurements deployed in farming contexts.
-                </p>
-                <p className="text-sm text-gray-400">
-                  Topic: distributed systems · blockchain · data validation · tokenization
-                </p>
-                <p className="text-xs text-gray-500 mt-3 italic">
-                  University of Turin · November 2025 · Advisor: Prof. Andrea Bracciali
-                </p>
+                ))}
               </div>
-            </div>
 
-            <h3 className="text-2xl font-semibold mb-6 text-teal-400">Academic & Personal</h3>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-              <div className="bg-gray-800/60 rounded-lg p-6 shadow">
-                <h3 className="text-lg font-semibold mb-2 text-white">Atom Fission Simulation</h3>
-                <p className="text-gray-400 mb-3 text-sm">
-                  Simulated atomic fission with various initial conditions in a Unix environment.
-                </p>
-                <p className="text-xs text-gray-500">C · Unix</p>
-              </div>
-              <div className="bg-gray-800/60 rounded-lg p-6 shadow">
-                <h3 className="text-lg font-semibold mb-2 text-white">Food Delivery Database</h3>
-                <p className="text-gray-400 mb-3 text-sm">
-                  Designed and implemented the database for a food-delivery application — full ER modeling and
-                  advanced SQL queries.
-                </p>
-                <p className="text-xs text-gray-500">PostgreSQL · draw.io</p>
-              </div>
-              <div className="bg-gray-800/60 rounded-lg p-6 shadow">
-                <h3 className="text-lg font-semibold mb-2 text-white">Radio Website Prototype</h3>
-                <p className="text-gray-400 mb-3 text-sm">
-                  UI/UX prototype for a radio station, built around persona-driven accessibility and responsive
-                  design.
-                </p>
-                <p className="text-xs text-gray-500">Figma</p>
-              </div>
-              <div className="bg-gray-800/60 rounded-lg p-6 shadow">
-                <h3 className="text-lg font-semibold mb-2 text-white">Sorting & Path Algorithms</h3>
-                <p className="text-gray-400 mb-3 text-sm">
-                  Implementation and analysis of Merge Sort, Quick Sort, shortest-path algorithms and the Edit
-                  Distance problem.
-                </p>
-                <p className="text-xs text-gray-500">C · Java</p>
-              </div>
-            </div>
-          </div>
-        </section>
+              <p className="mt-5 text-xs italic text-zinc-500">
+                Codebase confidential (proprietary). Snippet above is illustrative.
+              </p>
+            </article>
 
-        <section id="working-on" className="py-20 bg-gray-800/50">
-          <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-8 text-center">Currently Building</h2>
-            <div className="grid gap-8 md:grid-cols-2">
-              <div className="bg-gray-700 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold mb-3 text-teal-400">
-                  Root Cause Analysis with &quot;5 Why&quot; chains
+            {/* Blockchain thesis */}
+            <article className="glow-card flex flex-col rounded-xl border border-white/10 bg-white/[0.02] p-7 transition-colors hover:border-white/20">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-teal-400">BSc Thesis · UniTo</p>
+                <h3 className="mt-2 text-xl font-semibold text-zinc-100">
+                  Blockchain for Environmental Data
                 </h3>
-                <p className="text-gray-300 mb-4">
-                  Prototype on top of the ETR675 classifier: instead of just labeling a notification, walk a chain
-                  of &quot;why&quot; questions to surface plausible root causes from historical patterns. Exploring
-                  small transformer encoders fine-tuned on the maintenance corpus.
-                </p>
-                <p className="text-sm text-gray-400">PyTorch · transformers · Python</p>
               </div>
-              <div className="bg-gray-700 rounded-lg p-6 shadow-lg">
-                <h3 className="text-xl font-semibold mb-3 text-teal-400">Sharper English &amp; ML reading list</h3>
-                <p className="text-gray-300 mb-4">
-                  Pushing English from B2 toward C1 (technical interviews and EU job market are in English by
-                  default), and going through foundational ML papers and the scikit-learn / PyTorch source for the
-                  algorithms I actually ship.
-                </p>
-                <p className="text-sm text-gray-400">Reading · writing · interviewing</p>
+              <p className="mt-4 text-zinc-400">
+                A system for the validation and tokenization of agricultural environmental data on a blockchain.
+                Designed to bring trust and traceability to IoT sensor measurements in farming contexts — from
+                the moisture probe on the field to the auditable token on-chain.
+              </p>
+
+              {/* Tiny mermaid-like flow */}
+              <div className="mt-6 rounded-md border border-white/10 bg-black/40 p-5">
+                <div className="grid grid-cols-3 items-center gap-3 font-mono text-xs text-zinc-400">
+                  <div className="rounded border border-white/10 bg-white/[0.02] px-3 py-2 text-center">
+                    <div className="text-teal-400">IoT sensor</div>
+                    <div className="mt-1 text-[10px] text-zinc-500">field reading</div>
+                  </div>
+                  <div className="text-center text-zinc-600">
+                    <div className="font-mono text-base">→</div>
+                    <div className="text-[10px]">validate</div>
+                  </div>
+                  <div className="rounded border border-teal-400/40 bg-teal-400/5 px-3 py-2 text-center">
+                    <div className="text-teal-400">on-chain token</div>
+                    <div className="mt-1 text-[10px] text-zinc-500">auditable record</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {["Distributed Systems", "Blockchain", "Tokenization", "IoT data trust"].map((t) => (
+                  <span key={t} className="pill">
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <p className="mt-5 text-xs italic text-zinc-500">
+                University of Turin · November 2025 · Advisor: Prof. Andrea Bracciali
+              </p>
+            </article>
+          </div>
+
+          <h3 className="mt-16 mb-6 font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">
+            Academic &amp; personal
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                title: "Atom Fission Simulation",
+                desc: "Numerical simulation of atomic fission with several initial-condition setups in a Unix environment.",
+                stack: "C · Unix",
+              },
+              {
+                title: "Food Delivery Database",
+                desc: "ER modeling and advanced SQL for a food-delivery domain.",
+                stack: "PostgreSQL · draw.io",
+              },
+              {
+                title: "Radio Website Prototype",
+                desc: "Persona-driven UI/UX for a radio station, with a focus on accessibility and responsiveness.",
+                stack: "Figma",
+              },
+              {
+                title: "Sorting & Path Algorithms",
+                desc: "Implementation and analysis of Merge/Quick Sort, shortest-path algorithms and the Edit Distance problem.",
+                stack: "C · Java",
+              },
+            ].map((p) => (
+              <div
+                key={p.title}
+                className="rounded-lg border border-white/10 bg-white/[0.02] p-5 transition-colors hover:border-white/20"
+              >
+                <h4 className="text-sm font-semibold text-zinc-100">{p.title}</h4>
+                <p className="mt-2 text-sm text-zinc-400">{p.desc}</p>
+                <p className="mt-3 font-mono text-[11px] text-zinc-500">{p.stack}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* ---------- Skills ---------- */}
+        <Section id="skills" eyebrow="03 / skills" title="The toolkit.">
+          <div className="space-y-10">
+            {SKILL_GROUPS.map((g) => (
+              <div key={g.title} className="grid gap-4 md:grid-cols-[200px_1fr] md:gap-10">
+                <h3 className="font-mono text-sm uppercase tracking-[0.15em] text-zinc-400">{g.title}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {g.items.map((s) => (
+                    <span key={s} className="pill">
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <div className="grid gap-4 md:grid-cols-[200px_1fr] md:gap-10 pt-6 border-t border-white/5">
+              <h3 className="font-mono text-sm uppercase tracking-[0.15em] text-zinc-400">Languages</h3>
+              <div className="flex flex-wrap gap-3 text-sm">
+                <span className="text-zinc-300">
+                  Italian <span className="text-zinc-500">— native</span>
+                </span>
+                <span className="text-zinc-700">·</span>
+                <span className="text-zinc-300">
+                  English <span className="text-zinc-500">— B2 (working professionally in EN)</span>
+                </span>
               </div>
             </div>
           </div>
-        </section>
+        </Section>
 
-        <section id="contact" className="py-20 bg-gray-900">
-          <div className="max-w-2xl mx-auto px-4">
-            <h3 className="text-4xl font-bold mb-8 text-center">What&apos;s Next?</h3>
-            <h2 className="text-5xl font-bold mb-6 text-center text-teal-400 text-transparent bg-clip-text">
-              Get In Touch
-            </h2>
-            <p className="text-gray-400 text-center mb-12">
-              Interested in talking about AI/ML roles, industrial ML, or just want to compare notes on shipping
-              models? I&apos;m always happy to hear from you. Drop a message and I&apos;ll be in touch.
-            </p>
+        {/* ---------- Log / currently building ---------- */}
+        <Section id="log" eyebrow="04 / log" title="Currently building.">
+          <div className="space-y-5">
+            {LOG_ENTRIES.map((e) => (
+              <article
+                key={e.title}
+                className="grid gap-4 rounded-lg border border-white/10 bg-white/[0.02] p-6 transition-colors hover:border-white/20 md:grid-cols-[180px_1fr]"
+              >
+                <p className="font-mono text-xs uppercase tracking-[0.15em] text-zinc-500">{e.date}</p>
+                <div>
+                  <h3 className="text-lg font-semibold text-zinc-100">{e.title}</h3>
+                  <p className="mt-2 text-zinc-400">{e.body}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {e.tags.map((t) => (
+                      <span key={t} className="pill">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </Section>
 
-            <form className="space-y-6">
+        {/* ---------- Contact ---------- */}
+        <Section id="contact" eyebrow="05 / contact" title="Let&rsquo;s talk.">
+          <div className="grid gap-12 md:grid-cols-2">
+            <div className="space-y-5 text-zinc-300">
+              <p>
+                Interested in talking about AI/ML roles, industrial ML, or just want to compare notes on shipping
+                models? Drop a message — I&apos;ll be in touch.
+              </p>
+              <p className="text-zinc-400">
+                The fastest way is email:{" "}
+                <Link
+                  href="mailto:tizianofloriddia16@gmail.com"
+                  className="font-mono text-teal-400 hover:underline"
+                >
+                  tizianofloriddia16@gmail.com
+                </Link>
+                .
+              </p>
+              <div className="flex items-center gap-3 pt-2">
+                <Link
+                  href="https://github.com/Taizans"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
+                  aria-label="GitHub"
+                >
+                  <Github className="h-5 w-5" />
+                </Link>
+                <Link
+                  href="https://www.linkedin.com/in/tiziano-jhonny-floriddia-8478332b6/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </Link>
+              </div>
+            </div>
+
+            <form className="space-y-3">
               <input
                 type="text"
                 placeholder="Name"
-                className="w-full p-4 rounded-lg bg-white/5 border border-gray-800 focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors text-white"
+                className="w-full rounded-md border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 transition-colors focus:border-teal-400/60 focus:outline-none focus:ring-1 focus:ring-teal-400/40"
               />
               <input
                 type="email"
                 placeholder="Email"
-                className="w-full p-4 rounded-lg bg-white/5 border border-gray-800 focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors text-white"
+                className="w-full rounded-md border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 transition-colors focus:border-teal-400/60 focus:outline-none focus:ring-1 focus:ring-teal-400/40"
               />
               <textarea
                 placeholder="Message"
                 rows={6}
-                className="w-full p-4 rounded-lg bg-white/5 border border-gray-800 focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-colors text-white resize-none"
+                className="w-full resize-none rounded-md border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 transition-colors focus:border-teal-400/60 focus:outline-none focus:ring-1 focus:ring-teal-400/40"
               />
-              <div className="text-center">
-                <button
-                  type="submit"
-                  className="px-8 py-3 rounded-lg border border-teal-400 text-teal-400 hover:bg-teal-400 hover:text-black transition-colors"
-                >
-                  Send Message
-                </button>
-              </div>
+              <button
+                type="submit"
+                className="group inline-flex items-center gap-2 rounded-md border border-teal-400/60 px-5 py-2.5 text-sm text-teal-400 transition-colors hover:bg-teal-400 hover:text-black"
+              >
+                Send message
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </button>
             </form>
           </div>
-        </section>
+        </Section>
       </main>
 
-      <footer className="bg-gray-900 text-center py-6">
-        <p>&copy; 2026 Tiziano Jhonny Floriddia. All rights reserved.</p>
+      <footer className="border-t border-white/5 py-10 text-center font-mono text-xs text-zinc-500">
+        <p>
+          © 2026 Tiziano Jhonny Floriddia · built with Next.js, Tailwind, framer-motion · deployed on Render
+        </p>
       </footer>
     </div>
+  )
+}
+
+/* ----------------------------------------------------------------- *
+ *  Small layout primitives                                            *
+ * ----------------------------------------------------------------- */
+function Stat({ number, label }: { number: React.ReactNode; label: string }) {
+  return (
+    <div>
+      <div className="text-3xl font-semibold text-zinc-100 md:text-4xl">{number}</div>
+      <p className="mt-2 max-w-[28ch] text-xs uppercase tracking-[0.15em] text-zinc-500">{label}</p>
+    </div>
+  )
+}
+
+function Section({
+  id,
+  eyebrow,
+  title,
+  children,
+}: {
+  id: string
+  eyebrow: string
+  title: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <section id={id} className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div className="mb-12">
+        <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-teal-400">{eyebrow}</p>
+        <h2 className="text-3xl font-semibold tracking-tight text-zinc-100 md:text-5xl">{title}</h2>
+      </div>
+      {children}
+    </section>
   )
 }

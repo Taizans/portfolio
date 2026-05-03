@@ -1,8 +1,32 @@
 import type React from "react"
-import { Inter } from "next/font/google"
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+  display: "swap",
+})
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+})
+
+export const metadata: Metadata = {
+  title: "Tiziano Jhonny Floriddia — AI Engineer",
+  description:
+    "AI Engineer @ Alstom Ferroviaria. Machine Learning on industrial data, process automation, Microsoft Power Platform.",
+  metadataBase: new URL("https://tizianofloriddia.pages.dev"),
+  openGraph: {
+    title: "Tiziano Jhonny Floriddia — AI Engineer",
+    description:
+      "ML systems on operational railway data. 58k labeled notifications, 74.5% auto-classified in production.",
+    type: "website",
+  },
+}
 
 export default function RootLayout({
   children,
@@ -10,9 +34,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="antialiased">{children}</body>
     </html>
   )
 }
-
