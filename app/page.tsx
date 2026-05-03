@@ -354,9 +354,21 @@ export default function Page() {
                   ))}
                 </div>
 
-                <p className="mt-5 text-xs italic text-zinc-500">
-                  Codebase confidential (proprietary). Snippet above is illustrative.
-                </p>
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-xs italic text-zinc-500">
+                    Production code under NDA — companion synthetic-data demo public on GitHub.
+                  </p>
+                  <Link
+                    href="https://github.com/Taizans/railway-maintenance-demo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex shrink-0 items-center gap-1.5 rounded-md border border-teal-400/40 px-3 py-1.5 font-mono text-[11px] text-teal-400 transition-colors hover:border-teal-400 hover:bg-teal-400 hover:text-black"
+                  >
+                    <Github className="h-3.5 w-3.5" />
+                    View demo
+                    <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </Link>
+                </div>
               </article>
             </Reveal>
 
