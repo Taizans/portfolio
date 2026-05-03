@@ -33,6 +33,13 @@ body {
 .glow-card {
   position: relative;
   isolation: isolate;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glow-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 64px -22px rgba(45, 212, 191, 0.18),
+    0 0 0 1px rgba(45, 212, 191, 0.15);
 }
 .glow-card::before {
   content: "";
@@ -71,12 +78,16 @@ body {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #d4d4d8;
-  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease, color 0.2s ease, background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .pill:hover {
-  border-color: rgba(45, 212, 191, 0.6);
+  transform: translateY(-1px) scale(1.05);
+  border-color: rgba(45, 212, 191, 0.65);
   color: #2dd4bf;
-  background: rgba(45, 212, 191, 0.05);
+  background: rgba(45, 212, 191, 0.07);
+  box-shadow: 0 6px 14px -4px rgba(45, 212, 191, 0.3);
 }
 
 /* ---------------- Aurora blobs ---------------- */
@@ -140,4 +151,28 @@ body {
 /* Reduce motion fallback */
 @media (prefers-reduced-motion: reduce) {
   .aurora-blob { animation: none; }
+}
+
+/* ---------------- Custom cursor ---------------- */
+.custom-cursor-dot {
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.9);
+  mix-blend-mode: screen;
+}
+.custom-cursor-ring {
+  background: radial-gradient(
+    circle at center,
+    rgba(45, 212, 191, 0.18) 0%,
+    rgba(45, 212, 191, 0.05) 50%,
+    transparent 75%
+  );
+  filter: blur(6px);
+  mix-blend-mode: screen;
+}
+
+/* Hide custom cursor on touch / no-hover devices */
+@media (hover: none), (pointer: coarse) {
+  .custom-cursor-dot,
+  .custom-cursor-ring {
+    display: none;
+  }
 }

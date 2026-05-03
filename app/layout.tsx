@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import LenisProvider from "./components/LenisProvider"
 import AuroraBackground from "./components/AuroraBackground"
+import CustomCursor from "./components/CustomCursor"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body className="antialiased">
         <AuroraBackground />
         <LenisProvider />
+        <CustomCursor />
         {children}
       </body>
     </html>

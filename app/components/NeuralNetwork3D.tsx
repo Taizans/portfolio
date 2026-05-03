@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber"
 import { Line } from "@react-three/drei"
-import { useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import * as THREE from "three"
 
 /* ----------------------------------------------------------------- *
@@ -61,10 +61,35 @@ function NeuralScene() {
 
   const nodeRefs = useRef<Array<THREE.Mesh | null>>([])
 
+  // Track normalized mouse position (-1..1)
+  const mouseRef = useRef({ x: 0, y: 0 })
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      mouseRef.current.x = (e.clientX / window.innerWidth - 0.5) * 2
+      mouseRef.current.y = (e.clientY / window.innerHeight - 0.5) * 2
+    }
+    window.addEventListener("mousemove", onMove)
+    return () => window.removeEventListener("mousemove", onMove)
+  }, [])
+
+  // Continuous auto-rotation accumulator, decoupled from mouse offset
+  const autoY = useRef(0)
+
   useFrame((state, delta) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.18
-      groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.15) * 0.12
+      autoY.current += delta * 0.14
+      const targetY = autoY.current + mouseRef.current.x * 0.55
+      const targetX = mouseRef.current.y * -0.35
+      groupRef.current.rotation.y = THREE.MathUtils.lerp(
+        groupRef.current.rotation.y,
+        targetY,
+        0.06,
+      )
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(
+        groupRef.current.rotation.x,
+        targetX,
+        0.06,
+      )
     }
     // Pulse nodes subtly
     const t = state.clock.elapsedTime
