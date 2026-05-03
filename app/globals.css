@@ -12,7 +12,8 @@ html {
 }
 
 body {
-  background-color: #050505;
+  /* No bg here — html provides #050505 base, AuroraBackground sits above it.
+     If body had its own background it would cover the fixed -z-20 aurora layer. */
   color: #fafafa;
   font-family: var(--font-sans);
   font-feature-settings: "ss01", "cv11";

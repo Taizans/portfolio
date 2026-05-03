@@ -133,7 +133,7 @@ const LOG_ENTRIES: { date: string; title: string; body: string; tags: string[] }
 /* ================================================================= */
 export default function Page() {
   return (
-    <div className="min-h-screen text-zinc-100">
+    <div className="relative z-10 min-h-screen text-zinc-100">
       {/* ---------- Nav ---------- */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-[#050505]/70 backdrop-blur-md">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
