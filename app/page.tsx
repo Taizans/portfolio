@@ -4,9 +4,15 @@ import { motion, useInView, animate } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
 import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
-import EmbeddingClusters from "./components/EmbeddingClusters"
+import dynamic from "next/dynamic"
 import ClassifierDemo from "./components/ClassifierDemo"
 import { Reveal, StaggerGroup, StaggerItem } from "./components/Reveal"
+import { Magnetic } from "./components/Magnetic"
+
+const NeuralNetwork3D = dynamic(() => import("./components/NeuralNetwork3D"), {
+  ssr: false,
+  loading: () => null,
+})
 
 /* ----------------------------------------------------------------- *
  *  Animated count-up — used in the Hero stats row                    *
@@ -127,9 +133,7 @@ const LOG_ENTRIES: { date: string; title: string; body: string; tags: string[] }
 /* ================================================================= */
 export default function Page() {
   return (
-    <div className="min-h-screen bg-[#050505] text-zinc-100">
-      <EmbeddingClusters />
-
+    <div className="min-h-screen text-zinc-100">
       {/* ---------- Nav ---------- */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-[#050505]/70 backdrop-blur-md">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -156,13 +160,15 @@ export default function Page() {
               Contact
             </Link>
           </div>
-          <Link
-            href="mailto:tizianofloriddia16@gmail.com"
-            className="group inline-flex items-center gap-1.5 rounded-md border border-white/10 px-3 py-1.5 font-mono text-xs text-zinc-300 transition-colors hover:border-teal-400/60 hover:text-teal-400"
-          >
-            get in touch
-            <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </Link>
+          <Magnetic strength={0.35}>
+            <Link
+              href="mailto:tizianofloriddia16@gmail.com"
+              className="group inline-flex items-center gap-1.5 rounded-md border border-white/10 px-3 py-1.5 font-mono text-xs text-zinc-300 transition-colors hover:border-teal-400/60 hover:text-teal-400"
+            >
+              get in touch
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Link>
+          </Magnetic>
         </nav>
       </header>
 
@@ -172,7 +178,8 @@ export default function Page() {
           id="home"
           className="relative flex min-h-screen items-center overflow-hidden bg-dot-grid px-6 pt-24"
         >
-          <div className="mx-auto w-full max-w-6xl">
+          <NeuralNetwork3D />
+          <div className="relative z-10 mx-auto w-full max-w-6xl">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -207,31 +214,37 @@ export default function Page() {
               </div>
 
               <div className="mt-12 flex items-center gap-3">
-                <Link
-                  href="https://github.com/Taizans"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                  className="rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
-                >
-                  <Github className="h-5 w-5" />
-                </Link>
-                <Link
-                  href="https://www.linkedin.com/in/tiziano-jhonny-floriddia-8478332b6/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                  className="rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
-                >
-                  <Linkedin className="h-5 w-5" />
-                </Link>
-                <Link
-                  href="mailto:tizianofloriddia16@gmail.com"
-                  aria-label="Email"
-                  className="rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
-                >
-                  <Mail className="h-5 w-5" />
-                </Link>
+                <Magnetic>
+                  <Link
+                    href="https://github.com/Taizans"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="GitHub"
+                    className="block rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
+                  >
+                    <Github className="h-5 w-5" />
+                  </Link>
+                </Magnetic>
+                <Magnetic>
+                  <Link
+                    href="https://www.linkedin.com/in/tiziano-jhonny-floriddia-8478332b6/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn"
+                    className="block rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
+                  >
+                    <Linkedin className="h-5 w-5" />
+                  </Link>
+                </Magnetic>
+                <Magnetic>
+                  <Link
+                    href="mailto:tizianofloriddia16@gmail.com"
+                    aria-label="Email"
+                    className="block rounded-md border border-white/10 p-2.5 text-zinc-400 transition-colors hover:border-teal-400/60 hover:text-teal-400"
+                  >
+                    <Mail className="h-5 w-5" />
+                  </Link>
+                </Magnetic>
               </div>
             </motion.div>
           </div>
@@ -551,13 +564,15 @@ export default function Page() {
                   rows={6}
                   className="w-full resize-none rounded-md border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 transition-colors focus:border-teal-400/60 focus:outline-none focus:ring-1 focus:ring-teal-400/40"
                 />
-                <button
-                  type="submit"
-                  className="group inline-flex items-center gap-2 rounded-md border border-teal-400/60 px-5 py-2.5 text-sm text-teal-400 transition-colors hover:bg-teal-400 hover:text-black"
-                >
-                  Send message
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </button>
+                <Magnetic strength={0.4}>
+                  <button
+                    type="submit"
+                    className="group inline-flex items-center gap-2 rounded-md border border-teal-400/60 px-5 py-2.5 text-sm text-teal-400 transition-colors hover:bg-teal-400 hover:text-black"
+                  >
+                    Send message
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </button>
+                </Magnetic>
               </form>
             </Reveal>
           </div>

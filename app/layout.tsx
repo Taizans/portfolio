@@ -1,6 +1,8 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
+import LenisProvider from "./components/LenisProvider"
+import AuroraBackground from "./components/AuroraBackground"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -35,7 +37,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <AuroraBackground />
+        <LenisProvider />
+        {children}
+      </body>
     </html>
   )
 }

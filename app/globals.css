@@ -6,7 +6,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Lenis manages smooth scroll natively — do not set scroll-behavior here */
   background-color: #050505;
   color-scheme: dark;
 }
@@ -23,13 +23,12 @@ body {
   color: #fafafa;
 }
 
-/* Subtle grid pattern, used as background overlay on hero */
 .bg-dot-grid {
   background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
   background-size: 28px 28px;
 }
 
-/* Glow border on hover for featured project cards */
+/* ---------------- Glow border on featured cards ---------------- */
 .glow-card {
   position: relative;
   isolation: isolate;
@@ -59,7 +58,7 @@ body {
   opacity: 1;
 }
 
-/* Mono pill tag */
+/* ---------------- Mono pill tag ---------------- */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -77,4 +76,67 @@ body {
   border-color: rgba(45, 212, 191, 0.6);
   color: #2dd4bf;
   background: rgba(45, 212, 191, 0.05);
+}
+
+/* ---------------- Aurora blobs ---------------- */
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(110px);
+  will-change: transform;
+}
+
+.aurora-blob-1 {
+  top: -20vh;
+  left: -10vw;
+  width: 60vw;
+  height: 60vh;
+  background: rgba(45, 212, 191, 0.18);
+  animation: aurora-drift-1 22s ease-in-out infinite;
+}
+.aurora-blob-2 {
+  top: 20vh;
+  right: -10vw;
+  width: 55vw;
+  height: 55vh;
+  background: rgba(167, 139, 250, 0.15);
+  animation: aurora-drift-2 28s ease-in-out infinite;
+}
+.aurora-blob-3 {
+  bottom: -15vh;
+  left: 10vw;
+  width: 50vw;
+  height: 50vh;
+  background: rgba(96, 165, 250, 0.14);
+  animation: aurora-drift-3 32s ease-in-out infinite;
+}
+.aurora-blob-4 {
+  top: 60vh;
+  left: 30vw;
+  width: 45vw;
+  height: 45vh;
+  background: rgba(244, 114, 182, 0.1);
+  animation: aurora-drift-4 36s ease-in-out infinite;
+}
+
+@keyframes aurora-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(15vw, 8vh) scale(1.15); }
+}
+@keyframes aurora-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-12vw, 12vh) scale(0.9); }
+}
+@keyframes aurora-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8vw, -12vh) scale(1.1); }
+}
+@keyframes aurora-drift-4 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-10vw, 6vh) scale(1.05); }
+}
+
+/* Reduce motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob { animation: none; }
 }
